@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--  Active Row-->
+    <item android:state_selected="true"
+         android:drawable="@color/colorAccent" />
+    <!--  Inactive Row-->
+    <item android:state_selected="false"
+         android:drawable="@color/cardview_light_background" />
+</selector>
