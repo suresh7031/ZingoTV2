@@ -9,7 +9,7 @@
     android:layout_gravity="center"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="25dp"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/downtext"
@@ -19,5 +19,14 @@
         android:gravity="center"
         android:text="Arjun"
         android:textColor="#000" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_gravity="center"
+        android:id="@+id/tab_selection_down"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        android:background="@color/colorAccent">
+    </LinearLayout>
 
 </LinearLayout>

@@ -13,9 +13,8 @@
         android:layout_height="40dp"
         android:layout_alignParentTop="true"
         android:layout_gravity="center"
-        android:focusable="false"
         android:descendantFocusability="afterDescendants"
-
+        android:nextFocusDown="@id/selection_bottom"
         android:orientation="horizontal">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -27,6 +26,8 @@
         android:layout_below="@id/selection_top"
         android:descendantFocusability="afterDescendants"
         android:layout_gravity="center"
+        android:nextFocusDown="@id/recycler_view"
+        android:nextFocusUp="@id/selection_top"
         android:orientation="horizontal">
 
     </androidx.recyclerview.widget.RecyclerView>
@@ -41,5 +42,6 @@
         android:layout_marginBottom="0dp"
         android:descendantFocusability="afterDescendants"
         android:orientation="vertical"
+        android:nextFocusUp="@id/selection_bottom"
         tools:listitem="@layout/grid_recyclerview_item" />
 </RelativeLayout>

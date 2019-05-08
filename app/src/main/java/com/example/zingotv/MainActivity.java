@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.room.Room;
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements GuideFragment.OnF
 
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("regToken", "1556537130VXIY6");
+        parameters.put("regToken", "1557315885TDTSN");
         parameters.put("ver_name", "setupbox3");
         parameters.put("ver_code", "5");
         final Call<JSONData> call = jsonPlaceHolderApi.getApiData(parameters);
@@ -175,5 +176,23 @@ public class MainActivity extends AppCompatActivity implements GuideFragment.OnF
 
     }
 
+    @Override
+    public void onBackPressed() {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
 
+        boolean handled = false;
+        for(Fragment f : fragmentList) {
+            if(f instanceof GuideFragment) {
+                handled = ((GuideFragment)f).onBackPressed();
+
+                if(handled) {
+                    break;
+                }
+            }
+        }
+
+        if(!handled) {
+            super.onBackPressed();
+        }
+    }
 }

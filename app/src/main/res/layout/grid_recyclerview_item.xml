@@ -11,6 +11,13 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="3dp"
+        android:background="@color/light_white"
+        android:id="@+id/channelselection">
+
+    <LinearLayout
         android:id="@+id/channel"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -69,5 +76,6 @@
             android:layout_width="114dp"
             android:layout_height="49dp"
             android:layout_gravity="center" />
+    </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

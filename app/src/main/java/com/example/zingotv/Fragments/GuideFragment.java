@@ -92,6 +92,7 @@ public class GuideFragment extends Fragment {
     TextView sports;
     TextView favourites;
     MainActivity context;
+    View fragmentView;
     public static final int BANNER = 0;
     public static final int RECVIEW1 = 1;
     public static final int RECVIEW2 = 2;
@@ -139,7 +140,9 @@ public class GuideFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_guide, container, false);
+        fragmentView=v;
         context = (MainActivity) getActivity();
+
         recyclerView = v.findViewById(R.id.recycler_view);
         recyclerView_top=v.findViewById(R.id.selection_top);
         recyclerView_bottom=v.findViewById(R.id.selection_bottom);
@@ -155,22 +158,68 @@ public class GuideFragment extends Fragment {
         Log.i("Lists", "onCreateView: " + listsDAO.LISTS().get(0).getTitle());
         database = Room.databaseBuilder(getActivity(), authItemDatabase.class, "post_database").allowMainThreadQueries().build();
         listEventsDAO = database.listEventsDAO();
-
         Log.i("events", "onCreateView: "+listEventsDAO.getEvents().get(0).getPchNo());
 
-        recyclerView_top.setHasFixedSize(true);
-        topadapter = new TopAdapter(getActivity(), data.getResponse().getMenuItems(),recyclerView_top);
-        recyclerView_top.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
-        recyclerView_top.setAdapter(topadapter);
-
-        recyclerView_bottom.setHasFixedSize(true);
-        bottomAdapter=new BottomAdapter(getActivity(),data.getResponse().getFilterDetails(),recyclerView_bottom);
-        recyclerView_bottom.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
-        recyclerView_bottom.setAdapter(bottomAdapter);
+        v.setFocusable(true);
+        v.requestFocus();
 
 
 
-       /* videos.setOnClickListener(new View.OnClickListener() {
+        v.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    Log.i(TAG, "onKey: dpad");
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                        return true;
+                    }
+                    if(keyCode == KeyEvent.KEYCODE_DPAD_UP){
+                        return true;
+                    }
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT){
+                        return true;
+                    }
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT){
+                        return true;
+                    }
+                    if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER){
+                        recyclerView_top.setHasFixedSize(true);
+                        topadapter = new TopAdapter(getActivity(), data.getResponse().getMenuItems(),recyclerView_top);
+                        recyclerView_top.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
+                        recyclerView_top.setAdapter(topadapter);
+                        recyclerView_top.setVisibility(View.VISIBLE);
+
+                        recyclerView_bottom.setHasFixedSize(true);
+                        bottomAdapter=new BottomAdapter(getActivity(),data.getResponse().getFilterDetails(),recyclerView_bottom);
+                        recyclerView_bottom.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL,false));
+                        recyclerView_bottom.setAdapter(bottomAdapter);
+                        recyclerView_bottom.setVisibility(View.VISIBLE);
+
+                        recyclerView.setHasFixedSize(true);
+                        adapter = new Adapter(getActivity(), data, recyclerView);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        fragmentView.setFocusable(false);
+                        //recyclerView.scrollToPosition(adapter.getFocusedItemPosition());
+                        //recyclerView.get
+                        //recyclerView.findViewHolderForAdapterPosition().itemView.requestFocus();
+                        //recyclerView.requestFocus();
+                        //recyclerView.has;
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+
+
+
+
+
+       /*
+       videos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SupportSQLiteDatabase sqLiteDatabase = database.getOpenHelper().getWritableDatabase();
@@ -232,19 +281,40 @@ public class GuideFragment extends Fragment {
             }
         });*/
 
-
-        recyclerView.setHasFixedSize(true);
-        adapter = new Adapter(getActivity(), data, recyclerView);
-        /* Log.i("fragment", "onCreateView: "+data.size());*/
-        /*mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(
-                1, //number of grid columns
-                GridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(mStaggeredGridLayoutManager);*/
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-       // recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        recyclerView.setAdapter(adapter);
         return v;
     }
+
+
+    public boolean onBackPressed(){
+        Log.i(TAG, "onBackPressed: guideFragment");
+        if(recyclerView.hasFocus()){
+        //if(recyclerView.getFocusedChild().isFocused()){
+            Log.i(TAG, "onBackPressed: items recyclerview focused");
+            recyclerView_bottom.requestFocus();
+            return true;
+        }
+        else if(recyclerView_bottom.hasFocus()){
+        //else if(recyclerView_bottom.getFocusedChild().isFocused()){
+            Log.i(TAG, "onBackPressed: bottom recyclerview focused");
+            recyclerView_top.requestFocus();
+            return true;
+        }
+        else if(recyclerView_top.hasFocus()){
+        //else if (recyclerView_top.getFocusedChild().isFocused()){
+            Log.i(TAG, "onBackPressed: top recyclerview focused");
+
+            recyclerView.setVisibility(View.INVISIBLE);
+            recyclerView_top.setVisibility(View.INVISIBLE);
+            recyclerView_bottom.setVisibility(View.INVISIBLE);
+            fragmentView.setFocusable(true);
+            fragmentView.requestFocus();
+            return true;
+        }
+        Log.i(TAG, "onBackPressed: nothing focused");
+        return true;
+    }
+
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

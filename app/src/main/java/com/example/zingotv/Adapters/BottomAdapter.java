@@ -47,17 +47,20 @@ public class BottomAdapter extends RecyclerView.Adapter {
         Log.i(TAG, "onAttachedToRecyclerView: ");
         super.onAttachedToRecyclerView(recyclerView);
         recyclerView.scrollToPosition(focused);
-        recyclerView.smoothScrollToPosition(focused);
+        //recyclerView.smoothScrollToPosition(focused);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        SingleItemBottom singleItemBottom = (SingleItemBottom) holder;
+        final SingleItemBottom singleItemBottom = (SingleItemBottom) holder;
         singleItemBottom.bottomtext.setText(filterDetails.get(position).getName());
 
         Log.i(TAG, "onBindViewHolder:");
         singleItemBottom.itemView.setFocusable(focused == position);
+        if(focused==position){
+            singleItemBottom.selectionView.setVisibility(View.VISIBLE);
+        }
 
         singleItemBottom.itemView.setOnKeyListener(new View.OnKeyListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -65,31 +68,21 @@ public class BottomAdapter extends RecyclerView.Adapter {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 RecyclerView.LayoutManager lm = mRecyclerViewbottom.getLayoutManager();
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
-
+                        if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                        singleItemBottom.selectionView.setVisibility(View.VISIBLE);
                     }
                     if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-
+                        singleItemBottom.selectionView.setVisibility(View.VISIBLE);
                     }
                     if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                         Log.i(TAG, "onKey: right"+focused);
-                  //      mRecyclerViewbottom.requestFocus();
-                        //focused+=1;
-                       // lm.scrollToPosition(focused);
-                        //notifyItemChanged(focused);
-                      // notifyDataSetChanged();
-                     //   return true;
+                        singleItemBottom.selectionView.setVisibility(View.INVISIBLE);
                         return tryMoveSelection(lm, 1);
 
                     }
                     if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                         Log.i(TAG, "onKey: left "+focused);
-                   //     mRecyclerViewbottom.requestFocus();
-                     //   focused-=1;
-                        //lm.scrollToPosition(focused);
-                        //notifyItemChanged(focused);
-                      //  notifyDataSetChanged();
-                        //return true;
+                        singleItemBottom.selectionView.setVisibility(View.INVISIBLE);
                         return tryMoveSelection(lm, -1);
 
                     }
@@ -132,13 +125,14 @@ public class BottomAdapter extends RecyclerView.Adapter {
     }
 
     private class SingleItemBottom extends RecyclerView.ViewHolder {
+        private final View selectionView;
         TextView bottomtext;
 
 
         public SingleItemBottom(View itemView) {
             super(itemView);
             bottomtext = itemView.findViewById(R.id.downtext);
-
+            selectionView= itemView.findViewById(R.id.tab_selection_down);
         }
     }
 
